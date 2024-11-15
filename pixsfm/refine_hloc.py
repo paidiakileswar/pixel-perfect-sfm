@@ -218,16 +218,21 @@ if __name__ == "__main__":
     elif args.command == 'reconstructor':
         logger.info("Will perform full 3D reconstruction.")
         logger.info("Received arguments for 3D triangulation: %s", args)
+        
+        # Add the image_list for splits 
+        image_dir = args.image_dir
+        references = [str(p.relative_to(image_dir)) for p in image_dir.iterdir()]
+
         if args.single_camera:
             sfm.reconstruction(
                 args.sfm_dir, args.image_dir, args.pairs_path, args.features_path,
                 args.matches_path, cache_path=args.cache_path, camera_mode=pycolmap.CameraMode.SINGLE,
-                image_options=image_options)
+                image_options=image_options, image_list=references)
         else:
             sfm.reconstruction(
                 args.sfm_dir, args.image_dir, args.pairs_path, args.features_path,
                 args.matches_path, cache_path=args.cache_path,
-                image_options=image_options)
+                image_options=image_options, image_list=references)
     elif args.command == 'triangulator':
         logger.info("Will perform 3D triangulation.")
         logger.info("Received arguments for 3D triangulation: %s", args)
