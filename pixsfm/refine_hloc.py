@@ -187,6 +187,10 @@ if __name__ == "__main__":
     add_common_args(parser_rec)
     add_camera_args(parser_rec)
 
+    parser_rec.add_argument(
+        '--split_run', default=False, action='store_true',
+        help='Enable splitting the image dataset into overlapping subsets for reconstruction (default: False).')
+    
     parser_tri = subparsers.add_parser(
         'triangulator', aliases=['tri'],
         help='3D triangulation from an existing COLMAP model, '
@@ -223,11 +227,16 @@ if __name__ == "__main__":
         image_dir = args.image_dir
         references = [str(p.relative_to(image_dir)) for p in image_dir.iterdir()]
 
-        if args.single_camera:
+        if args.single_camera and args.split_run:
             sfm.reconstruction(
                 args.sfm_dir, args.image_dir, args.pairs_path, args.features_path,
                 args.matches_path, cache_path=args.cache_path, camera_mode=pycolmap.CameraMode.SINGLE,
-                image_options=image_options, image_list=references)
+                image_options=image_options, image_list=references, split_run=args.split_run)
+        elif args.split_run:
+            sfm.reconstruction(
+                args.sfm_dir, args.image_dir, args.pairs_path, args.features_path,
+                args.matches_path, cache_path=args.cache_path,
+                image_options=image_options, image_list=references, split_run=args.split_run)
         else:
             sfm.reconstruction(
                 args.sfm_dir, args.image_dir, args.pairs_path, args.features_path,
