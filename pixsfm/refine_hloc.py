@@ -53,11 +53,11 @@ class PixSfM(PixSfM_colmap):
                 matches_path, reference_model_path,
                 **hloc_args)
 
-        if not os.path.exists(model_path):
-            print("~"*100 + "\n" + "~"*100)
-            print("Extraction , Matching , Database Insertion Completed")
-            print("~"*100 + "\n" + "~"*100)
-            return None,None
+        # if not os.path.exists(model_path):
+        print("~"*100 + "\n" + "~"*100)
+        print("Extraction , Matching , Database Insertion Completed")
+        print("~"*100 + "\n" + "~"*100)
+        return None, None
             
         reconstruction = pycolmap.Reconstruction(str(model_path))
         if self.conf.BA.apply:
